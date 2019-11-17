@@ -9,4 +9,5 @@ import com.pp.strangergym.models.Treino;
 @Repository
 public interface TreinoRepository extends JpaRepository<Treino, Long>{
 
+	Treino findById(long id);
 }

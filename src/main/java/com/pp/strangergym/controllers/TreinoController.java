@@ -1,48 +1,55 @@
 package com.pp.strangergym.controllers;
 
+import java.util.Optional;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.pp.strangergym.models.Treino;
 import com.pp.strangergym.repository.TreinoRepository;
 
-@Controller
-//@RestController n funciona pois ira retornar o json
+@RestController
+@RequestMapping("/api") // tem q ser um substantivo n pode ser verbo
 public class TreinoController {
 	
 	@Autowired
 	public TreinoRepository tr;
 	
-	@RequestMapping(value = "/cadastrarTreino", method=RequestMethod.GET)
-	public String form() {
-		return "treino/formTreino";
+	@GetMapping("/listarTreinos")
+	public @ResponseBody Iterable<Treino> listarTreinos() { // 
+		Iterable<Treino> listaTreinos = tr.findAll();
+		return listaTreinos;
 	}
 	
-	
-	@RequestMapping(value="/cadastrarTreino", method=RequestMethod.POST)
-	public String form(@Valid Treino treino, BindingResult result, RedirectAttributes attributes){
-		if(result.hasErrors()){
-			attributes.addFlashAttribute("mensagem", "Verifique os campos!");
-			return "redirect:/cadastrarTreino";
-		}
-		
-		tr.save(treino);
-		attributes.addFlashAttribute("mensagem", "Evento cadastrado com sucesso!");
-		return "redirect:/cadastrarTreino";
+	@GetMapping("/listarTreinos/{idTreino}")
+	public @ResponseBody Optional<Treino> getTreino(@PathVariable("idTreino") Long idTreino) { // 
+		return tr.findById(idTreino);
 	}
 	
-	@RequestMapping(value="/visualizarTreinos")
-	public ModelAndView listaTreinos() {
-		ModelAndView mv = new ModelAndView("index");
-		Iterable<Treino> treinos = tr.findAll();
-		mv.addObject("treinos", treinos);
-		return mv;
+	@PostMapping("/cadastrarTreino")
+	public Treino cadastrarTreino(@RequestBody @Valid Treino treino) {
+		return tr.save(treino);
+	}
+	
+	@DeleteMapping("/treino")
+	public Treino deletaTreino(@RequestBody Treino treino) {
+		tr.delete(treino);
+		// retorna como resposta o evento q foi deletado
+		return treino;
+	}
+	
+	@PutMapping("/treino")
+	public Treino atualizarTreino(@RequestBody Treino treino) {
+		return tr.save(treino);
 	}
 }
