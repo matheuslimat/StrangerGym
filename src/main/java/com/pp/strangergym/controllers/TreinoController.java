@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pp.strangergym.models.Treino;
 import com.pp.strangergym.repository.TreinoRepository;
+import com.pp.strangergym.services.TreinoService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,38 +30,38 @@ import io.swagger.annotations.ApiOperation;
 public class TreinoController {
 	
 	@Autowired
-	public TreinoRepository tr;
+	TreinoService ts; // instancia treino service
 	
 	@GetMapping("/listarTreinos")
 	@ApiOperation(value = "Retorna uma lista de Treinos de todo mundo")
 	public @ResponseBody Iterable<Treino> listarTreinos() { // 
-		Iterable<Treino> listaTreinos = tr.findAll();
+		Iterable<Treino> listaTreinos = ts.buscarTreinos();
 		return listaTreinos;
 	}
 	
 	@GetMapping("/listarTreinos/{idTreino}")
 	@ApiOperation(value = "Retorna uma treino quando especificado um idTreino")
-	public @ResponseBody Optional<Treino> getTreino(@PathVariable("idTreino") Long idTreino) { // 
-		return tr.findById(idTreino);
+	public @ResponseBody Treino getTreino(@PathVariable("idTreino") Long idTreino) { // 
+		return ts.buscarTreino(idTreino);
 	}
 	
-	@PostMapping("/cadastrarTreino")
-	@ApiOperation(value = "Cadastra um treino")
-	public Treino cadastrarTreino(@RequestBody @Valid Treino treino) {
-		return tr.save(treino);
-	}
-	
-	@DeleteMapping("/treino")
-	@ApiOperation(value = "Deleta um treino passando o Json dele")
-	public Treino deletaTreino(@RequestBody Treino treino) {
-		tr.delete(treino);
-		// retorna como resposta o evento q foi deletado
-		return treino;
-	}
-	
-	@PutMapping("/treino")
-	@ApiOperation(value = "Atualiza o treino passando o Json dele")
-	public Treino atualizarTreino(@RequestBody Treino treino) {
-		return tr.save(treino);
-	}
+//	@PostMapping("/cadastrarTreino")
+//	@ApiOperation(value = "Cadastra um treino")
+//	public Treino cadastrarTreino(@RequestBody @Valid Treino treino) {
+//		return tr.save(treino);
+//	}
+//	
+//	@DeleteMapping("/treino")
+//	@ApiOperation(value = "Deleta um treino passando o Json dele")
+//	public Treino deletaTreino(@RequestBody Treino treino) {
+//		tr.delete(treino);
+//		// retorna como resposta o evento q foi deletado
+//		return treino;
+//	}
+//	
+//	@PutMapping("/treino")
+//	@ApiOperation(value = "Atualiza o treino passando o Json dele")
+//	public Treino atualizarTreino(@RequestBody Treino treino) {
+//		return tr.save(treino);
+//	}
 }
