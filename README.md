@@ -1,7 +1,7 @@
 # Getting Started
 
-### Documentation
-Sistema de academia
+### StrangerGym
+
 
 *O sistema deve cadastrar um professor e um aluno
 
