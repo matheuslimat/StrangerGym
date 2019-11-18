@@ -32,36 +32,35 @@ public class TreinoController {
 	@Autowired
 	TreinoService ts; // instancia treino service
 	
-	@GetMapping("/listarTreinos")
+	@GetMapping("/treino")
 	@ApiOperation(value = "Retorna uma lista de Treinos de todo mundo")
 	public @ResponseBody Iterable<Treino> listarTreinos() { // 
-		Iterable<Treino> listaTreinos = ts.buscarTreinos();
+		Iterable<Treino> listaTreinos = ts.findAll();
 		return listaTreinos;
 	}
 	
-	@GetMapping("/listarTreinos/{idTreino}")
+	@GetMapping("/treino/{idTreino}")
 	@ApiOperation(value = "Retorna uma treino quando especificado um idTreino")
 	public @ResponseBody Treino getTreino(@PathVariable("idTreino") Long idTreino) { // 
-		return ts.buscarTreino(idTreino);
+		return ts.find(idTreino);
 	}
 	
-//	@PostMapping("/cadastrarTreino")
-//	@ApiOperation(value = "Cadastra um treino")
-//	public Treino cadastrarTreino(@RequestBody @Valid Treino treino) {
-//		return tr.save(treino);
-//	}
-//	
-//	@DeleteMapping("/treino")
-//	@ApiOperation(value = "Deleta um treino passando o Json dele")
-//	public Treino deletaTreino(@RequestBody Treino treino) {
-//		tr.delete(treino);
-//		// retorna como resposta o evento q foi deletado
-//		return treino;
-//	}
-//	
-//	@PutMapping("/treino")
-//	@ApiOperation(value = "Atualiza o treino passando o Json dele")
-//	public Treino atualizarTreino(@RequestBody Treino treino) {
-//		return tr.save(treino);
-//	}
+	@PostMapping("/treino")
+	@ApiOperation(value = "Cadastra um treino")
+	public Treino cadastrarTreino(@RequestBody @Valid Treino treino) {
+		return ts.create(treino);
+	}
+	
+	@DeleteMapping("/treino")
+	@ApiOperation(value = "Deleta um treino passando o Json dele")
+	public Treino deletaTreino(@RequestBody Treino treino) {
+		return ts.delete(treino);
+	}
+	
+	@PutMapping("/treino")
+	@ApiOperation(value = "Atualiza o treino passando o Json dele")
+	public Treino atualizarTreino(@RequestBody Treino treino) {
+		return ts.update(treino);
+	}
+	
 }

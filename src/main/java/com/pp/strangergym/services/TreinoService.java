@@ -12,14 +12,29 @@ public class TreinoService {
 	@Autowired
 	private TreinoRepository tr;
 	
-	public Treino buscarTreino(long id) {
+	public Treino find(long id) {
 		Treino treino = tr.findById(id);
 		return treino;
 	}
 	
-	public Iterable<Treino> buscarTreinos() {
+	public Iterable<Treino> findAll() {
 		Iterable<Treino> listaTreinos = tr.findAll();
 		return listaTreinos;
+	}
+	
+	public Treino create(Treino treino) {
+		tr.save(treino);
+		return treino;
+	}
+	
+	public Treino delete(Treino treino) {
+		tr.delete(treino);
+		return treino;
+	}
+	
+	public Treino update(Treino treino) {
+		tr.save(treino);
+		return treino;
 	}
 
 }
