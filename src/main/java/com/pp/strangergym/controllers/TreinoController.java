@@ -1,7 +1,5 @@
 package com.pp.strangergym.controllers;
 
-import java.util.Optional;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pp.strangergym.models.Treino;
-import com.pp.strangergym.repository.TreinoRepository;
 import com.pp.strangergym.services.TreinoService;
 
 import io.swagger.annotations.Api;
@@ -35,8 +32,7 @@ public class TreinoController {
 	@GetMapping("/treino")
 	@ApiOperation(value = "Retorna uma lista de Treinos de todo mundo")
 	public @ResponseBody Iterable<Treino> listarTreinos() { // 
-		Iterable<Treino> listaTreinos = ts.findAll();
-		return listaTreinos;
+		return ts.findAll();
 	}
 	
 	@GetMapping("/treino/{idTreino}")

@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 
@@ -32,8 +33,24 @@ public class Treino implements Serializable {
 	
 	@NotBlank
 	private String dataFim;
-	
-	@OneToOne
-	private Aluno aluno;
 
+	@OneToOne
+	@JoinColumn(name="login")
+	private Aluno aluno;
+	
+	
+	public Treino() {}
+
+	public Treino(Long idTreino, @NotBlank String titulo, @NotBlank String descricao, @NotBlank String dataInicio,
+			@NotBlank String dataFim, Aluno aluno) {
+		super();
+		this.idTreino = idTreino;
+		this.titulo = titulo;
+		this.descricao = descricao;
+		this.dataInicio = dataInicio;
+		this.dataFim = dataFim;
+		this.aluno = aluno;
+	}
+	
+	
 }
