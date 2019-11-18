@@ -39,8 +39,8 @@ public class Treino implements Serializable {
 	@NotBlank
 	private String dataFim;
 
-	@OneToOne
-	private Aluno aluno;
+//	@OneToOne
+//	private Aluno aluno;
 	
 	
 	public Treino() {}

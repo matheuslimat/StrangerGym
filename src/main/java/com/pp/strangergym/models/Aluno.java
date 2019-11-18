@@ -44,6 +44,7 @@ public class Aluno implements Serializable {
 
 	@OneToOne
 	@JoinColumn(name="id_login")
+	//esse treino vai dar o joincolumn no id_login ou seja vai pertencer a esse aluno
 	private Treino treino;
 
 //	@OneToOne
@@ -53,7 +54,7 @@ public class Aluno implements Serializable {
 	}
 
 	public Aluno(String login, @NotBlank String senha, @NotBlank String nome, @NotBlank String sobrenome,
-			@NotBlank String sexo, @NotBlank String anoNasc, Treino treino, Aluno aluno) {
+			@NotBlank String sexo, @NotBlank String anoNasc, Treino treino) {
 		super();
 		this.login = login;
 		this.senha = senha;
