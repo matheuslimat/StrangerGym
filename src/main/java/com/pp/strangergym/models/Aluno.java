@@ -7,7 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -47,8 +47,8 @@ public class Aluno implements Serializable {
 	//esse treino vai dar o joincolumn no id_login ou seja vai pertencer a esse aluno
 	private Treino treino;
 
-//	@OneToOne
-//	private Professor professor;
+	@ManyToOne()
+	private Professor professor;
 
 	public Aluno() {
 	}
