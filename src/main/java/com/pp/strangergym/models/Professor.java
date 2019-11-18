@@ -9,19 +9,23 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
 
 @Data
 @Entity
+@Table(name = "professor")
 public class Professor implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@NotBlank
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private String login;
+	private Long professorIdLogin;
+	
+	@NotBlank
+	private String professorLogin;
 	
 	@NotBlank
 	private String senha;

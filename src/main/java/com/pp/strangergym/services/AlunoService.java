@@ -1,20 +1,20 @@
 package com.pp.strangergym.services;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.pp.strangergym.models.Aluno;
 import com.pp.strangergym.repository.AlunoRepository;
 
+@Service
 public class AlunoService {
 
 	@Autowired
 	private AlunoRepository ar;
 	
 	public Aluno find(String login) {
-		Optional<Aluno> aluno = ar.findById(login);
-		return aluno.get();
+		Aluno aluno = ar.findByUsername(login);
+		return aluno;
 	}
 	
 	public Iterable<Aluno> findAll() {
