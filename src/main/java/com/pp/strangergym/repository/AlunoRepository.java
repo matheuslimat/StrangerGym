@@ -11,6 +11,8 @@ import com.pp.strangergym.models.Aluno;
 @Repository
 public interface AlunoRepository extends JpaRepository<Aluno, String>{
 	
-	@Query("SELECT u FROM Aluno u WHERE u.login = :login")
-	Aluno findByUsername(@Param("login") String login);
+//	@Query("SELECT u FROM Aluno u WHERE u.login = :login")
+//	Aluno findByUsername(@Param("login") String login);
+
+	Aluno findByLogin(String login);
 }

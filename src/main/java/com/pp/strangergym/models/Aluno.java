@@ -1,6 +1,8 @@
 package com.pp.strangergym.models;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collection;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,12 +14,17 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.pp.strangergym.enums.RoleEnum;
+
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "aluno")
-public class Aluno implements Serializable {
+public class Aluno implements UserDetails,Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -44,11 +51,17 @@ public class Aluno implements Serializable {
 
 	@OneToOne
 	@JoinColumn(name="id_login")
-	//esse treino vai dar o joincolumn no id_login ou seja vai pertencer a esse aluno
 	private Treino treino;
 
 	@ManyToOne()
 	private Professor professor;
+	
+	private RoleEnum role;
+	
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return Arrays.asList(role);
+	}
 
 	public Aluno() {
 	}
@@ -64,5 +77,36 @@ public class Aluno implements Serializable {
 		this.anoNasc = anoNasc;
 		this.treino = treino;
 	}
+
+	@Override
+	public String getPassword() {
+		return null;
+	}
+
+	@Override
+	public String getUsername() {
+		return null;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return false;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return false;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return false;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return false;
+	}
+
 
 }
