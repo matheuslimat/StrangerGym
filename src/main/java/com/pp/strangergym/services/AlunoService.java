@@ -33,7 +33,7 @@ public class AlunoService implements UserDetailsService {
 	public Aluno create(Aluno aluno) {
 		aluno.setSenha(encoder.encode(aluno.getSenha()));
 		// o role deve ser especificado tambem na classe springsecurity
-		//aluno.setRole(RoleEnum.CLIENTE);
+		aluno.setRole(RoleEnum.CLIENTE);
 		return ar.save(aluno);
 		
 //		ar.save(aluno);
@@ -41,7 +41,7 @@ public class AlunoService implements UserDetailsService {
 	}
 	
 	public void delete(String login) {
-		Aluno aluno = ar.findById(login).get();
+		Aluno aluno = ar.findByLogin(login);
 		ar.delete(aluno);
 	}
 	

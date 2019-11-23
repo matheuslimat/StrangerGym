@@ -50,7 +50,7 @@ public class AlunoController {
 	// response body pq estamos passando o login no corpo da requisição
 	@DeleteMapping("/aluno/{login}")
 	@ApiOperation(value = "Deleta um aluno passando login dele")
-	public @ResponseBody void  deletaTreino(@PathVariable("login") String login) {
+	public @ResponseBody void  delete(@PathVariable("login") String login) {
 		as.delete(login);
 	}
 	

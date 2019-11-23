@@ -41,7 +41,7 @@ public class ProfessorController {
 	
 	@PostMapping("/professor")
 	@ApiOperation(value = "Cadastra um professor")
-	public Professor cadastrarAluno(@RequestBody @Valid Professor professor) {
+	public Professor cadastrarProfessor(@RequestBody @Valid Professor professor) {
 		return ps.create(professor);
 	}
 	

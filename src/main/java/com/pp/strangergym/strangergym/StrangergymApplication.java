@@ -55,9 +55,9 @@ public class StrangergymApplication implements CommandLineRunner {
 		
 		ac.cadastrarAluno(aluno1);
 		
-//		Professor professor = new Professor("matheus.professor", "senha", "nome", "sobrenome", "sexo", Arrays.asList(aluno1));
-//		
-//		pc.cadastrarAluno(professor);
+		Professor professor = new Professor("matheus.professor", "senha", "nome", "sobrenome", "sexo", Arrays.asList(aluno1));
+		
+		pc.cadastrarProfessor(professor);
 		
 	}
 

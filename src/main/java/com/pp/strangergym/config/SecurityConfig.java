@@ -64,9 +64,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable();
 		http.authorizeRequests()
-			.antMatchers(HttpMethod.GET, "/api/professor").permitAll()
+			.antMatchers(HttpMethod.GET, "/api/professor/**").permitAll()
 			.antMatchers(HttpMethod.GET, "/api/aluno/**").permitAll()
 			.antMatchers(HttpMethod.GET, "/api/treino").permitAll()
+			.antMatchers(HttpMethod.POST, "/api/aluno/**").permitAll()
+			.antMatchers(HttpMethod.DELETE, "/api/aluno/**").permitAll()
+			.antMatchers(HttpMethod.POST, "/api/treino").permitAll()
+			.antMatchers("/", "/v2/api-docs", "/configuration/ui", "/swagger-resources", "/swagger-resources/**",
+			"/configuration/security", "/swagger-ui.html", "/webjars/**").permitAll()
 			.anyRequest().authenticated();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}

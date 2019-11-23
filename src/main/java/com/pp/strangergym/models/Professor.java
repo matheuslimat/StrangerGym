@@ -6,12 +6,12 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+
+import com.pp.strangergym.enums.RoleEnum;
 
 import lombok.Data;
 
@@ -40,8 +40,10 @@ public class Professor implements Serializable{
 	@NotBlank
 	private String sexo;
 	
+	private RoleEnum role;
+	
 	@OneToMany()
-	@JoinColumn(name = "idProfessor")
+	//@JoinColumn(name = "idProfessor")
 	private List<Aluno> alunos = new ArrayList<>();
 	
 	public Professor() {}
