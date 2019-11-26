@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -15,55 +16,36 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-
-import com.pp.strangergym.security.filters.AuthEntryPoint;
+import com.pp.strangergym.security.JWTAuthenticationFilter;
+import com.pp.strangergym.security.JWTAuthorizationFilter;
+import com.pp.strangergym.security.JWTutil;
 import com.pp.strangergym.services.AlunoService;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
 	private AlunoService alunoService;
 	
 	@Autowired
-	private AuthEntryPoint entryPoint;
-
-//	@Override
-//	protected void configure(HttpSecurity httpSecurity) throws Exception {
-//		httpSecurity.csrf().disable()
-//			.authorizeRequests()
-//			.antMatchers(SecurityConstants.SWAGGER).permitAll()
-//			.antMatchers(HttpMethod.POST, "/aluno/").hasAuthority(RoleEnum.ADMIN.getAuthority())
-//			.antMatchers(HttpMethod.POST, "/aluno").permitAll()
-//			.antMatchers(HttpMethod.GET, "api/aluno/").permitAll()
-//			.antMatchers(HttpMethod.GET, "/treino/**").permitAll()
-//			.antMatchers("/professor/**").hasAuthority(RoleEnum.ADMIN.getAuthority())
-//			.anyRequest().authenticated().and()
-//			.exceptionHandling().authenticationEntryPoint(entryPoint).and()
-//			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-//			.addFilterBefore(new JWTLoginFilter("/login", authenticationManager(),alunoService),
-//	                UsernamePasswordAuthenticationFilter.class)
-//			.addFilterBefore(new JWTAuthenticationFilter(alunoService),
-//	                UsernamePasswordAuthenticationFilter.class);
-//	}
-//	
-//	@Override
-//	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//		auth.userDetailsService(alunoService).passwordEncoder(encoder());
-//	}
-//	
+	private JWTutil jwtUtil;
 	
-	private static final String[] PUBLIC_MATCHERS_GET = {
-			"/aluno",
-			"/professor/**",
-			"/treino/**"
-	};
+	@Autowired
+	private UserDetailsService userService;
+	
+	public static final String[] PUBLIC_MATCHERS = {
+			"api/aluno",
+			"/swagger-ui.html#/",
+			"/login"
+		};
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable();
 		http.authorizeRequests()
+			.antMatchers(PUBLIC_MATCHERS).permitAll()
 			.antMatchers(HttpMethod.GET, "/api/professor/**").permitAll()
 			.antMatchers(HttpMethod.GET, "/api/aluno/**").permitAll()
 			.antMatchers(HttpMethod.GET, "/api/treino").permitAll()
@@ -72,8 +54,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers(HttpMethod.POST, "/api/treino").permitAll()
 			.antMatchers("/", "/v2/api-docs", "/configuration/ui", "/swagger-resources", "/swagger-resources/**",
 			"/configuration/security", "/swagger-ui.html", "/webjars/**").permitAll()
-			.anyRequest().authenticated();
-		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+			.anyRequest().authenticated()
+			.and()
+			.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil))
+			.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userService))
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+	}
+	
+	@Bean
+	public BCryptPasswordEncoder bCryptPasswordEncorder() {
+		return new BCryptPasswordEncoder();
+	}
+	
+	@Override
+	public void configure(AuthenticationManagerBuilder auth) throws Exception{
+		auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncorder());
 	}
 	
 	@Bean
@@ -87,11 +82,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-	
-	
-	@Bean
-	public BCryptPasswordEncoder encoder() {
-		return new BCryptPasswordEncoder();
-	}
 
 }

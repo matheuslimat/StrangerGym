@@ -3,6 +3,7 @@ package com.pp.strangergym.controllers;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,7 @@ public class AlunoController {
 	@Autowired
 	AlunoService as;
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_PROFESSOR')")
 	@GetMapping("/aluno")
 	@ApiOperation(value = "Retorna todos os Alunos")
 	public @ResponseBody Iterable<Aluno> listarAlunos() { // 
@@ -41,6 +43,7 @@ public class AlunoController {
 		return as.find(login);
 	}
 	
+	@PreAuthorize("hasRole('ROLE_USUARIO')")
 	@PostMapping("/aluno")
 	@ApiOperation(value = "Cadastra um aluno")
 	public Aluno cadastrarAluno(@RequestBody @Valid Aluno aluno) {
@@ -48,12 +51,14 @@ public class AlunoController {
 	}
 	
 	// response body pq estamos passando o login no corpo da requisição
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@DeleteMapping("/aluno/{login}")
 	@ApiOperation(value = "Deleta um aluno passando login dele")
 	public @ResponseBody void  delete(@PathVariable("login") String login) {
 		as.delete(login);
 	}
 	
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PutMapping("/aluno")
 	@ApiOperation(value = "Atualiza nome e treino do aluno passando o Json dele")
 	public Aluno atualizarTreino(@RequestBody Aluno aluno) {

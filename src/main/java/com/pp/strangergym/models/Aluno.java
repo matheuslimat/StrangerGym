@@ -1,23 +1,23 @@
 package com.pp.strangergym.models;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import com.pp.strangergym.enums.RoleEnum;
 
@@ -26,7 +26,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "aluno")
-public class Aluno implements UserDetails,Serializable {
+public class Aluno implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -51,20 +51,20 @@ public class Aluno implements UserDetails,Serializable {
 	@NotBlank
 	private String anoNasc;
 
-	// removendo o aluno remove o treino associado a ele
-	@OneToOne(cascade = CascadeType.REMOVE)
+	@OneToOne(cascade = CascadeType.REMOVE) // Removendo o aluno remove o treino associado a ele
 	@JoinColumn(name="id_login")
 	private Treino treino;
 
-	private RoleEnum role;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	private Professor professor;
 	
+	@ElementCollection(fetch=FetchType.EAGER)
+	@CollectionTable(name="Permissao_Aluno")
+	private Set<Integer> role = new HashSet<Integer>();
 	
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return Arrays.asList(role);
+	public Set<RoleEnum> getRole() {
+		return role.stream().map(x -> RoleEnum.toEnum(x)).collect(Collectors.toSet());
 	}
 
 	public Aluno() {
@@ -81,36 +81,9 @@ public class Aluno implements UserDetails,Serializable {
 		this.anoNasc = anoNasc;
 		this.treino = treino;
 	}
-
-	@Override
-	public String getPassword() {
-		return null;
+	
+	public void addRole(RoleEnum role) {
+		this.role.add(role.getCod());
 	}
-
-	@Override
-	public String getUsername() {
-		return null;
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		return false;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return false;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return false;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return false;
-	}
-
 
 }

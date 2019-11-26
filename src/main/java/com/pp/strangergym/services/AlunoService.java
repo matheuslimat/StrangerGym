@@ -1,9 +1,6 @@
 package com.pp.strangergym.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +9,7 @@ import com.pp.strangergym.models.Aluno;
 import com.pp.strangergym.repository.AlunoRepository;
 
 @Service
-public class AlunoService implements UserDetailsService {
+public class AlunoService {
 
 	@Autowired
 	private AlunoRepository ar;
@@ -33,11 +30,9 @@ public class AlunoService implements UserDetailsService {
 	public Aluno create(Aluno aluno) {
 		aluno.setSenha(encoder.encode(aluno.getSenha()));
 		// o role deve ser especificado tambem na classe springsecurity
-		aluno.setRole(RoleEnum.CLIENTE);
+		aluno.addRole(RoleEnum.USUARIO);
 		return ar.save(aluno);
-		
-//		ar.save(aluno);
-//		return aluno;
+
 	}
 	
 	public void delete(String login) {
@@ -55,11 +50,6 @@ public class AlunoService implements UserDetailsService {
 	private void updateData(Aluno newObj, Aluno aluno) {
 		newObj.setNome(aluno.getNome());
 		newObj.setTreino(aluno.getTreino());
-	}
-
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		return find(username);
 	}
 
 }
